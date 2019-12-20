@@ -13,6 +13,8 @@ export interface IAttachmentReaderService {
   drawCanvasFromHtmlImageAsync(htmlCanvasElement: HTMLCanvasElement,
                                imageSource: HTMLImageElement): void;
 
+  loadImageFromDataUrlAsync(dataUrl: string): Observable<HTMLImageElement>;
+
   //#endregion
 
 }

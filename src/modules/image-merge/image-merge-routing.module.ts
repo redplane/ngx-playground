@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {ImageMergeComponent} from './image-merge.component';
+import {CommonModule} from '@angular/common';
 
 const moduleRoutes: Routes = [
   {
@@ -12,9 +13,10 @@ const moduleRoutes: Routes = [
 
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(moduleRoutes)
-  ],
+    imports: [
+        RouterModule.forChild(moduleRoutes),
+        CommonModule
+    ],
   declarations: [
     ImageMergeComponent
   ],

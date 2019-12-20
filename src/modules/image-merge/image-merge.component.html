@@ -6,8 +6,8 @@
       <div class="form-group">
         <table class="table table-striped">
           <tbody>
-          <tr>
-            <td>Image path</td>
+          <tr *ngFor="let imageItem of addedImageItems">
+            <td>{{imageItem.path}}</td>
           </tr>
           </tbody>
         </table>
@@ -23,7 +23,9 @@
       </div>
     </div>
     <div class="col-6">
-      <canvas ></canvas>
+      <div class="row">
+        <canvas #htmlCanvasElement></canvas>
+      </div>
     </div>
   </div>
 

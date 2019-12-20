@@ -10,6 +10,11 @@ export class ImageItem {
 
   //#region Constructor
 
+  constructor(path: string, dataUrl: string) {
+    this.path = path;
+    this.dataUrl = dataUrl;
+  }
+
   //#endregion
 
 }
