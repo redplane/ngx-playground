@@ -1,0 +1,30 @@
+<div class="container-fluid"
+     [style.margin-top]="'50px'">
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <table class="table table-striped">
+          <tbody>
+          <tr>
+            <td>Image path</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <input #htmlFileSelector
+             (change)="attachmentSelected($event)"
+             type="file"
+             hidden>
+      <div class="form-group">
+        <button class="btn btn-primary" (click)="clickAttachmentSelection()">
+          Add image
+        </button>
+      </div>
+    </div>
+    <div class="col-6">
+      <canvas ></canvas>
+    </div>
+  </div>
+
+</div>
