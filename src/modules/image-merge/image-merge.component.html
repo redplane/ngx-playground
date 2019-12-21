@@ -20,12 +20,32 @@
         <button class="btn btn-primary" (click)="clickAttachmentSelection()">
           Add image
         </button>
+
+        <button class="btn btn-danger"
+                (click)="clickClearCanvas()">
+          Clear canvas
+        </button>
       </div>
+
     </div>
     <div class="col-6">
-      <div class="row">
-        <canvas #htmlCanvasElement></canvas>
+
+      <canvas #htmlCanvasElement
+              [style.width]="'100%'"></canvas>
+
+      <div class="row" resize-sensor="true"
+           (resized)="handleCanvasResizeEvent($event)">
+
+
+
+<!--        <div class="col-12"-->
+<!--             *ngFor="let item of addedImageItems">-->
+<!--          <img class="img-fluid"-->
+<!--               [src]="item.dataUrl">-->
+<!--        </div>-->
       </div>
+
+
     </div>
   </div>
 

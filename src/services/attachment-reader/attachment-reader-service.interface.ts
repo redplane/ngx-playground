@@ -8,13 +8,6 @@ export interface IAttachmentReaderService {
 
   loadTextFromBlobAsync(blob: Blob): Observable<string>;
 
-  loadImageFromBlobAsync(blob: Blob): Observable<HTMLImageElement>;
-
-  drawCanvasFromHtmlImageAsync(htmlCanvasElement: HTMLCanvasElement,
-                               imageSource: HTMLImageElement): void;
-
-  loadImageFromDataUrlAsync(dataUrl: string): Observable<HTMLImageElement>;
-
   //#endregion
 
 }

@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {ATTACHMENT_READER_SERVICE_INJECTOR} from './attachment-reader.injector';
+import {ATTACHMENT_READER_SERVICE_INJECTOR} from '../../constants/services-injector.constant';
 import {AttachmentReaderService} from './attachment-reader.service';
 
 @NgModule({
