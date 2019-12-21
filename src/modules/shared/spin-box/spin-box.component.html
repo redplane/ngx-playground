@@ -1,9 +1,7 @@
 <div #slot class="slot"
      resize-sensor="true"
      (resized)="handleSlotSizeChanged($event)">
-  <div #initialCarousel class="item-carousel"
-       [@verticalMove]="{value: hasAnimationStarted, params: { x: loadSizeInUnit(-5 * itemSize.height, 'px')}}"
-       (@verticalMove.done)="handleVerticalMoveDoneEvent($event)">
+  <div #initialCarousel class="item-carousel">
     <div *ngFor="let item of [1, 2, 3, 4, 5]"
          [style.width.px]="itemSize.width"
          [style.height.px]="itemSize.height"

@@ -3,6 +3,7 @@ import * as $ from 'jquery';
 import {SpinStatuses} from './spin-statuses.enum';
 import {ISize} from '../../../models/size.interface';
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
+import * as anime from 'animejs/lib/anime';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -11,10 +12,13 @@ import {animate, keyframes, state, style, transition, trigger} from '@angular/an
   styleUrls: ['spin-box.component.scss'],
   animations: [
     trigger('verticalMove', [
-      state('true', style({
+      state('start', style({
         top: '{{x}}'
       }), {params: {x: '0'}}),
-      transition('* => true', animate('10s'))
+      state('finish', style({
+        top: 0
+      })),
+      transition('* => true', animate('10s')),
     ])
   ],
   exportAs: 'spin-box'
@@ -38,6 +42,9 @@ export class SpinBoxComponent implements OnInit {
   // Image that used to display while slot is spinning.
   @Input('spin-background')
   public readonly spinBackgroundPhoto: string;
+
+  @ViewChild('initialCarousel', {static: false})
+  public initialCarousel: ElementRef;
 
   // Whether slot is spinning or not.
   // tslint:disable-next-line:variable-name
@@ -64,7 +71,7 @@ export class SpinBoxComponent implements OnInit {
   // tslint:disable-next-line:variable-name
   private _ngOnSpinStarted: EventEmitter<Promise<void>>;
 
-  public colors = ['#5F2C50', '#EA4154', '#F35734', '#E9D62A', '#3BB070'];
+  public colors = ['#5F2C50', '#EA4154', '#F35734', '#E9D62A', '#5F2C50'];
 
   public hasAnimationStarted = false;
 
@@ -104,6 +111,7 @@ export class SpinBoxComponent implements OnInit {
   * */
   public ngOnInit(): void {
     this._controlSpinStatus = SpinStatuses.initial;
+
   }
 
   /*
@@ -212,7 +220,35 @@ export class SpinBoxComponent implements OnInit {
   }
 
   public clickSpin(): void {
-    this.hasAnimationStarted = true;
+    // this.hasAnimationStarted = true;
+    const totalHeight = 4 * this.itemSize.height;
+    let loopCounter = 0;
+
+    const htmlElement = this.initialCarousel.nativeElement as HTMLElement;
+
+    console.log(totalHeight);
+    const animation = anime({
+      targets: htmlElement,
+      translateY: `-${totalHeight}px`,
+      loop: true,
+      duration: 300,
+      easing: 'linear',
+      loopComplete: (anim) => {
+        loopCounter++;
+
+        if (loopCounter > 20) {
+          animation.pause();
+          anime.remove(htmlElement);
+          htmlElement.style.transform = '';
+          console.log(htmlElement.style);
+          console.log(htmlElement);
+        }
+      }
+    });
+
+    console.log(animation);
+
+
   }
 
   //#endregion
