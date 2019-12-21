@@ -1,0 +1,16 @@
+<div #slot class="slot"
+     resize-sensor="true"
+     (resized)="handleSlotSizeChanged($event)">
+  <div #initialCarousel class="item-carousel"
+       [@verticalMove]="{value: hasAnimationStarted, params: { x: loadSizeInUnit(-5 * itemSize.height, 'px')}}"
+       (@verticalMove.done)="handleVerticalMoveDoneEvent($event)">
+    <div *ngFor="let item of [1, 2, 3, 4, 5]"
+         [style.width.px]="itemSize.width"
+         [style.height.px]="itemSize.height"
+         [style.background-color]="colors[item - 1]">
+      {{item}}
+    </div>
+  </div>
+</div>
+
+<button class="btn btn-primary" (click)="clickSpin()">Spin</button>

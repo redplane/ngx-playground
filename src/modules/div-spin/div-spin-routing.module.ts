@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {DivSpinComponent} from './div-spin.component';
 import {RouterModule, Routes} from '@angular/router';
+import {SpinBoxModule} from '../shared/spin-box/spin-box.module';
 
 const moduleRoutes: Routes = [
   {
@@ -15,6 +16,7 @@ const moduleRoutes: Routes = [
     DivSpinComponent
   ],
   imports: [
+    SpinBoxModule,
     RouterModule.forChild(moduleRoutes)
   ],
   exports: [
