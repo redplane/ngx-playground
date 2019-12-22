@@ -44,3 +44,5 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+/report.20191222.012541.16208.0.001.json
+/package-lock.json

@@ -4,6 +4,7 @@ import {Component} from '@angular/core';
   // tslint:disable-next-line:component-selector
   selector: 'div-spin',
   templateUrl: 'div-spin.component.html',
+  styleUrls: ['div-spin.component.scss']
 })
 export class DivSpinComponent {
 

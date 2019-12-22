@@ -2,13 +2,13 @@
      resize-sensor="true"
      (resized)="handleSlotSizeChanged($event)">
   <div #initialCarousel class="item-carousel">
-    <div *ngFor="let item of [1, 2, 3, 4, 5]"
+    <div *ngFor="let item of items"
+         [id]="item.id"
          [style.width.px]="itemSize.width"
-         [style.height.px]="itemSize.height"
-         [style.background-color]="colors[item - 1]">
+         [style.height.px]="itemSize.height">
+      <img [src]="item.imageUrl"
+           class="img-fluid">
       {{item}}
     </div>
   </div>
 </div>
-
-<button class="btn btn-primary" (click)="clickSpin()">Spin</button>
