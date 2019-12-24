@@ -87,6 +87,20 @@ export class SpinBoxComponent implements OnInit {
     this._items = value;
   }
 
+  @Input('size')
+  public set boxSize(size: ISize) {
+    const clonedSize = cloneDeep<ISize>(size);
+    if (clonedSize.width < 0) {
+      clonedSize.width = 0;
+    }
+
+    if (clonedSize.height < 0) {
+      clonedSize.height = 0;
+    }
+
+    this._itemSize = clonedSize;
+  }
+
   //#endregion
 
   //#region Constructor

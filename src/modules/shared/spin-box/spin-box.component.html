@@ -1,11 +1,13 @@
 <div #slot class="slot"
+     [style.width.px]="itemSize.width"
+     [style.height.px]="itemSize.width"
      resize-sensor="true"
      (resized)="handleSlotSizeChanged($event)">
   <div #initialCarousel class="item-carousel">
     <div *ngFor="let item of items"
          [id]="item.id"
          [style.width.px]="itemSize.width"
-         [style.height.px]="itemSize.height">
+         [style.height.px]="itemSize.width">
       <img [src]="item.imageUrl"
            class="img-fluid">
       {{item}}

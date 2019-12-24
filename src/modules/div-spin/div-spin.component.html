@@ -1,7 +1,11 @@
 <div class="container">
   <div class="row">
     <div class="col-6">
-      <spin-box [style.width]="'100%'"></spin-box>
+      <div resize-sensor="true"
+           (resized)="handleSpinBoxContainerResized($event)"></div>
+      <spin-box [size]="spinBoxSize"></spin-box>
+
+      {{spinBoxSize | json}}
     </div>
     <div class="col-6"></div>
   </div>
