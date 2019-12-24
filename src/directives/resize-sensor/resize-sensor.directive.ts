@@ -105,6 +105,7 @@ export class ResizeSensorDirective implements AfterViewInit, OnDestroy {
 
         this._elementResizedEvent
           .emit(size);
+        console.log(size);
       });
     }
   }

@@ -68,7 +68,6 @@ export class ImageMergeComponent implements AfterViewInit {
       .subscribe(htmlImageElement => {
 
         this.addedImageItems = addedImageItems;
-        console.log(this.addedImageItems);
 
         // if (this.htmlCanvas.width !== htmlImageElement.width) {
         //   this.htmlCanvas.width = htmlImageElement.width;

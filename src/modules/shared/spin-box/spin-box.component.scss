@@ -1,11 +1,18 @@
+:host {
+  width: 100%;
+}
+
 .slot {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  display: inline-block;
+  position: relative;
 }
 
 .item-carousel {
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
 }

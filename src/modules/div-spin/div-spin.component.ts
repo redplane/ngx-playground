@@ -36,7 +36,6 @@ export class DivSpinComponent {
 
   public handleSpinBoxContainerResized(resizedSize: ISize): void {
     this._spinBoxSize = resizedSize;
-    console.log(this._spinBoxSize);
   }
 
 
