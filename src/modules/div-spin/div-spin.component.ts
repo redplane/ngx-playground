@@ -1,5 +1,6 @@
-import {Component} from '@angular/core';
+import {Component, ContentChild, ViewChild} from '@angular/core';
 import {ISize} from '../../models/size.interface';
+import {SpinBoxComponent} from '../shared/spin-box/spin-box.component';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -14,6 +15,9 @@ export class DivSpinComponent {
   // tslint:disable-next-line:variable-name
   private _spinBoxSize: ISize;
 
+  @ContentChild(SpinBoxComponent, {static: false})
+  public spinner: SpinBoxComponent;
+
   //#endregion
 
   //#region Accessors
@@ -27,15 +31,15 @@ export class DivSpinComponent {
   //#region Constructor
 
   constructor() {
-    this._spinBoxSize = {width: 0, height: 0};
   }
 
   //#endregion
 
   //#region Methods
 
-  public handleSpinBoxContainerResized(resizedSize: ISize): void {
-    this._spinBoxSize = resizedSize;
+  public clickSpin(): void {
+    this.spinner
+      .spin(200, 40);
   }
 
 

@@ -1,8 +1,12 @@
 <div class="container">
   <div class="row">
     <div class="col-6">
-      <spin-box></spin-box>
+      <spin-box #spinner="spinBox"></spin-box>
     </div>
-    <div class="col-6"></div>
+    <div class="col-6">
+      <button class="btn btn-primary" (click)="clickSpin()">
+        Spin
+      </button>
+    </div>
   </div>
 </div>

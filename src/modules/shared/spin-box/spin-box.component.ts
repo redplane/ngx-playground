@@ -14,7 +14,7 @@ import {cloneDeep} from 'lodash';
   selector: 'spin-box',
   templateUrl: 'spin-box.component.html',
   styleUrls: ['spin-box.component.scss'],
-  exportAs: 'spin-box'
+  exportAs: 'spinBox'
 })
 export class SpinBoxComponent implements OnInit {
 
@@ -206,6 +206,11 @@ export class SpinBoxComponent implements OnInit {
 
   // Called when slot size is changed.
   public handleSlotSizeChanged(changedSize: ISize): void {
+
+    if (this._itemSize.height === changedSize.height && this._itemSize.width === changedSize.width) {
+      return;
+    }
+
     this._itemSize = {...changedSize};
   }
 
