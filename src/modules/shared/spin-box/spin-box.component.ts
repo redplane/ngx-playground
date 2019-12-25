@@ -49,17 +49,9 @@ export class SpinBoxComponent implements OnInit, AfterContentInit {
   @Input('disabled')
   public hasControlDisabled = false;
 
-  // Called when spin is stopped.
   // tslint:disable-next-line:no-output-rename
-  @Output('spin-stopped')
-  // tslint:disable-next-line:variable-name
-  private _spinStoppedEvent: EventEmitter<void>;
-
-  // Called when spin is started.
-  // tslint:disable-next-line:no-output-rename
-  @Output('spin-started')
-  // tslint:disable-next-line:variable-name
-  private _spinStartedEvent: EventEmitter<void>;
+  @Output('spin-status-updated')
+  public readonly spinStatusUpdatedEvent: EventEmitter<string>;
 
   //#endregion
 
@@ -92,28 +84,12 @@ export class SpinBoxComponent implements OnInit, AfterContentInit {
     this._items = this._items.concat(this._items[0]);
   }
 
-  @Input('size')
-  public set boxSize(size: ISize) {
-    const clonedSize = cloneDeep<ISize>(size);
-    if (clonedSize.width < 0) {
-      clonedSize.width = 0;
-    }
-
-    if (clonedSize.height < 0) {
-      clonedSize.height = 0;
-    }
-
-    this._itemSize = clonedSize;
-  }
-
   //#endregion
 
   //#region Constructor
 
   public constructor(@Inject(IMAGE_PROCESSOR_SERVICE_INJECTOR) protected imageProcessorService: IImageProcessService) {
-    // Emitted when spin is stopped.
-    this._spinStoppedEvent = new EventEmitter<void>();
-    this._spinStartedEvent = new EventEmitter<void>();
+    this.spinStatusUpdatedEvent = new EventEmitter<string>();
   }
 
   //#endregion
@@ -169,24 +145,21 @@ export class SpinBoxComponent implements OnInit, AfterContentInit {
         translateY: ['0%', '-100%'],
         loop: true,
         duration,
-        easing: 'linear'
+        easing: 'linear',
+        begin: () => {
+          this.updateSpinStatus(SpinStatuses.beginSpinning);
+        },
+        complete: () => {
+          this.updateSpinStatus(SpinStatuses.idling);
+        },
+        loopComplete: () => {
+          loopCounter++;
+
+          if (loopCounter > maxLoop) {
+            this.stop(wonItemId);
+          }
+        }
       });
-
-    this._animationInstance
-      .loopComplete = (anim) => {
-      loopCounter++;
-
-      if (loopCounter > maxLoop) {
-        this._spinStoppedEvent.emit();
-        this.stop(wonItemId);
-      }
-    };
-
-    this._animationInstance
-      .loopBegin = () => {
-      this._spinStartedEvent.emit();
-    };
-
   }
 
   // Pause the spinner.
@@ -196,7 +169,7 @@ export class SpinBoxComponent implements OnInit, AfterContentInit {
       this._animationInstance.pause();
     }
 
-    this._spinStatus = SpinStatuses.idling;
+    this.updateSpinStatus(SpinStatuses.idling);
   }
 
   // Id of prize that needs to display.
@@ -210,7 +183,7 @@ export class SpinBoxComponent implements OnInit, AfterContentInit {
         .findIndex(item => item.id === itemId);
 
       if (itemIndex < 0) {
-        this._spinStatus = SpinStatuses.finishedSpinning;
+        this.updateSpinStatus(SpinStatuses.finishedSpinning);
         throw new Error(`Item with id: ${itemId} is not found`);
       }
 
@@ -223,7 +196,7 @@ export class SpinBoxComponent implements OnInit, AfterContentInit {
     this._animationInstance.seek(0);
     anime.remove(this._animationInstance);
     this._animationInstance = null;
-    this._spinStatus = SpinStatuses.finishedSpinning;
+    this.updateSpinStatus(SpinStatuses.finishedSpinning);
   }
 
   // Called when slot size is changed.
@@ -239,6 +212,12 @@ export class SpinBoxComponent implements OnInit, AfterContentInit {
   // Add animation to a specific instance.
   protected addAnimation(options: anime.AnimeParams): anime.AnimeInstance {
     return anime(options);
+  }
+
+  // Update spin status.
+  protected updateSpinStatus(status: string): void {
+    this._spinStatus = status;
+    this.spinStatusUpdatedEvent.emit(status);
   }
 
   //#endregion
