@@ -18,6 +18,11 @@ const moduleRoutes: Routes = [
     path: 'div-spin',
     loadChildren: () => import('./div-spin/div-spin.module')
       .then(m => m.DivSpinModule)
+  },
+  {
+    path: 'web-rtc',
+    loadChildren: () => import('./web-rtc/web-rtc.module')
+      .then(m => m.WebRtcModule)
   }
 ];
 
