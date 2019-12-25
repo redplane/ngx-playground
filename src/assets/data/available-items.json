@@ -1,0 +1,27 @@
+[
+  {
+    "id": "8d6fbf5f-6cd1-4c39-bcd6-fd7b5c216d04",
+    "name": "Black watch",
+    "imageUrl": "/assets/black-watch.png"
+  },
+  {
+    "id": "7448529a-702e-4e11-9486-a769eb47da20",
+    "name": "Blue bottle",
+    "imageUrl": "/assets/blue-bottle.png"
+  },
+  {
+    "id": "9a3e470e-fb2e-45d6-994a-1bdb9e96149b",
+    "name": "O long tea plus",
+    "imageUrl": "/assets/budweiser.png"
+  },
+  {
+    "id": "0b33795e-b4b1-4979-8168-ab7d9208d3d6",
+    "name": "Pink bottle",
+    "imageUrl": "/assets/pink-bottle.png"
+  },
+  {
+    "id": "794c57d9-ba91-4e93-ae84-5245c1ec146f",
+    "name": "Samsung s8",
+    "imageUrl": "/assets/samsung-s8.png"
+  }
+]

@@ -1,12 +1,28 @@
 <div class="container">
   <div class="row">
-    <div class="col-6">
-      <spin-box #spinner="spinBox"></spin-box>
+    <div class="col-sm-6">
+      <spin-box #spinner="spinBox" [items]="prizes"></spin-box>
     </div>
-    <div class="col-6">
-      <button class="btn btn-primary" (click)="clickSpin()">
-        Spin
-      </button>
+    <div class="col-sm-6">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Item</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of prizes">
+          <td>{{item.name}}</td>
+          <td>
+            <button class="btn btn-primary"
+                    (click)="clickSpin(item.id)">
+              <span class="fas fa-sync"></span>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

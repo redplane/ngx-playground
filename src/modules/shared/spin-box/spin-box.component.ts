@@ -1,13 +1,13 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import * as $ from 'jquery';
-import {SpinStatuses} from './spin-statuses.enum';
+import {AfterContentInit, Component, ElementRef, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {SpinStatuses} from './spin-statuses.constant';
 import {ISize} from '../../../models/size.interface';
-import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 // @ts-ignore
 import anime from 'animejs';
 import {SpinnerItem} from './spinner-item';
-import {Observable} from 'rxjs';
-import {cloneDeep} from 'lodash';
+import {cloneDeep, shuffle} from 'lodash';
+import {IMAGE_PROCESSOR_SERVICE_INJECTOR} from '../../../constants/services-injector.constant';
+import {IImageProcessService} from '../../../services/media-processor/image-processor-service.interface';
+import {SpinBoxInitializationStatuses} from './spin-box-initialization-statuses.constant';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -16,16 +16,15 @@ import {cloneDeep} from 'lodash';
   styleUrls: ['spin-box.component.scss'],
   exportAs: 'spinBox'
 })
-export class SpinBoxComponent implements OnInit {
+export class SpinBoxComponent implements OnInit, AfterContentInit {
 
   //#region Properties
 
   // tslint:disable-next-line:variable-name
   private _itemSize: ISize = {width: 0, height: 0};
 
-  // Duration for spinning.
   // tslint:disable-next-line:variable-name
-  private _duration: number;
+  private _initialItems: SpinnerItem[] = [];
 
   // Animation instance.
   // tslint:disable-next-line:variable-name
@@ -40,7 +39,11 @@ export class SpinBoxComponent implements OnInit {
 
   // Whether slot is spinning or not.
   // tslint:disable-next-line:variable-name
-  private _controlSpinStatus: SpinStatuses = SpinStatuses.initial;
+  private _spinStatus = SpinStatuses.idling;
+
+  // Whether control is being initialized or not.
+  // tslint:disable-next-line:variable-name
+  private _controlInitializationStatus = SpinBoxInitializationStatuses.initializingControl;
 
   // tslint:disable-next-line:no-input-rename
   @Input('disabled')
@@ -64,7 +67,7 @@ export class SpinBoxComponent implements OnInit {
 
   // Check whether spinner is spinning or not.
   public get spinning(): boolean {
-    return this._controlSpinStatus === SpinStatuses.spinning;
+    return this._spinStatus === SpinStatuses.spinning;
   }
 
   // Common size for every items that are inside spinner.
@@ -80,11 +83,13 @@ export class SpinBoxComponent implements OnInit {
   @Input('items')
   public set items(value: SpinnerItem[]) {
     if (!value) {
-      this._items = value;
+      this._items = [];
       return;
     }
 
-    this._items = value;
+    this._initialItems = cloneDeep<SpinnerItem[]>(value);
+    this._items = shuffle<SpinnerItem>(this._initialItems);
+    this._items = this._items.concat(this._items[0]);
   }
 
   @Input('size')
@@ -105,17 +110,7 @@ export class SpinBoxComponent implements OnInit {
 
   //#region Constructor
 
-  public constructor() {
-
-    const items: SpinnerItem[] = [];
-    items.push(new SpinnerItem('1', '/assets/blue-bottle.png'));
-    items.push(new SpinnerItem('2', '/assets/budweiser.png'));
-    items.push(new SpinnerItem('3', '/assets/foutain.png'));
-    items.push(new SpinnerItem('4', '/assets/fuze-tea.png'));
-    items.push(new SpinnerItem('1', '/assets/blue-bottle.png'));
-
-    this._items = items;
-
+  public constructor(@Inject(IMAGE_PROCESSOR_SERVICE_INJECTOR) protected imageProcessorService: IImageProcessService) {
     // Emitted when spin is stopped.
     this._spinStoppedEvent = new EventEmitter<void>();
     this._spinStartedEvent = new EventEmitter<void>();
@@ -129,14 +124,16 @@ export class SpinBoxComponent implements OnInit {
   * Called when component is initialized.
   * */
   public ngOnInit(): void {
-    this._controlSpinStatus = SpinStatuses.initial;
+  }
 
+  public ngAfterContentInit(): void {
+    this._controlInitializationStatus = SpinBoxInitializationStatuses.initializingControlDone;
   }
 
   /*
   * Start spinning.
   * */
-  public spin(duration: number, maxLoop: number): void {
+  public spin(duration: number, maxLoop: number, wonItemId?: string): void {
 
     if (!this.items || !this.items.length) {
       throw new Error('NO_ITEMS_AVAILABLE');
@@ -153,16 +150,23 @@ export class SpinBoxComponent implements OnInit {
       }
     }
 
+    if (this.spinning) {
+      throw new Error('SPIN_ALREADY_STARTED');
+    }
+
     // Calculate height
-    const totalHeight = (this.items.length - 1) * this.itemSize.height;
     let loopCounter = 0;
 
-    const htmlElement = this.initialCarousel.nativeElement as HTMLElement;
+    // Initialize items list.
+    this.items = this._initialItems;
+
+    const htmlElement = this.initialCarousel
+      .nativeElement as HTMLElement;
 
     this._animationInstance = this
       .addAnimation({
         targets: htmlElement,
-        translateY: `-${totalHeight}px`,
+        translateY: ['0%', '-100%'],
         loop: true,
         duration,
         easing: 'linear'
@@ -174,7 +178,7 @@ export class SpinBoxComponent implements OnInit {
 
       if (loopCounter > maxLoop) {
         this._spinStoppedEvent.emit();
-        this.stop();
+        this.stop(wonItemId);
       }
     };
 
@@ -191,17 +195,35 @@ export class SpinBoxComponent implements OnInit {
     if (this._animationInstance) {
       this._animationInstance.pause();
     }
+
+    this._spinStatus = SpinStatuses.idling;
   }
 
-  public stop(): void {
+  // Id of prize that needs to display.
+  public stop(itemId?: string): void {
     if (!this._animationInstance) {
       return;
     }
+
+    if (itemId) {
+      const itemIndex = this._items
+        .findIndex(item => item.id === itemId);
+
+      if (itemIndex < 0) {
+        this._spinStatus = SpinStatuses.finishedSpinning;
+        throw new Error(`Item with id: ${itemId} is not found`);
+      }
+
+      this._items = [this._items[itemIndex]]
+        .concat(this._items);
+    }
+
 
     this._animationInstance.pause();
     this._animationInstance.seek(0);
     anime.remove(this._animationInstance);
     this._animationInstance = null;
+    this._spinStatus = SpinStatuses.finishedSpinning;
   }
 
   // Called when slot size is changed.

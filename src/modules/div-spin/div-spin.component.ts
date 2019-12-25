@@ -1,6 +1,9 @@
-import {Component, ContentChild, ViewChild} from '@angular/core';
+import {Component, ContentChild, OnInit, ViewChild} from '@angular/core';
 import {ISize} from '../../models/size.interface';
 import {SpinBoxComponent} from '../shared/spin-box/spin-box.component';
+import {Prize} from '../../models/prize';
+import {SpinnerItem} from '../shared/spin-box/spinner-item';
+import {PrizeService} from '../../services/prize.service';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -8,15 +11,18 @@ import {SpinBoxComponent} from '../shared/spin-box/spin-box.component';
   templateUrl: 'div-spin.component.html',
   styleUrls: ['div-spin.component.scss']
 })
-export class DivSpinComponent {
+export class DivSpinComponent implements OnInit {
 
   //#region Properties
 
   // tslint:disable-next-line:variable-name
   private _spinBoxSize: ISize;
 
-  @ContentChild(SpinBoxComponent, {static: false})
+  @ViewChild(SpinBoxComponent, {static: false})
   public spinner: SpinBoxComponent;
+
+  public prizes: Prize[];
+
 
   //#endregion
 
@@ -30,18 +36,25 @@ export class DivSpinComponent {
 
   //#region Constructor
 
-  constructor() {
+  constructor(protected prizeService: PrizeService) {
   }
 
   //#endregion
 
   //#region Methods
 
-  public clickSpin(): void {
+  public clickSpin(itemId?: string): void {
     this.spinner
-      .spin(200, 40);
+      .spin(200, 40, itemId);
   }
 
 
   //#endregion
+  ngOnInit(): void {
+    this.prizeService
+      .loadAvailablePrizesAsync()
+      .subscribe(items => {
+        this.prizes = items;
+      });
+  }
 }

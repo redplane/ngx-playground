@@ -1,5 +1,7 @@
 import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
+import {PrizeService} from '../services/prize.service';
+import {HttpClientModule} from '@angular/common/http';
 
 const moduleRoutes: Routes = [
   {
@@ -21,7 +23,11 @@ const moduleRoutes: Routes = [
 
 @NgModule({
   imports: [
+    HttpClientModule,
     RouterModule.forRoot(moduleRoutes)
+  ],
+  providers: [
+    PrizeService
   ],
   exports: [
     RouterModule
