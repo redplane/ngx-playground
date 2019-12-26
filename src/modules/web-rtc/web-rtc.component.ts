@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, ViewChild} from '@angular/core';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -6,10 +6,31 @@ import {Component} from '@angular/core';
   templateUrl: 'web-rtc.component.html',
   styleUrls: ['web-rtc.component.scss']
 })
-export class WebRtcComponent {
+export class WebRtcComponent implements AfterViewInit {
+
+  //#region Properties
+
+  @ViewChild('videoPlayer', {static: false})
+  public videoPlayerElementRef: ElementRef;
+
+  //#endregion
+
+  //#region Constructor
 
   constructor() {
-    const video = new HTMLVideoElement();
-    video.srcObject = new MediaStream();
   }
+
+  //#endregion
+
+  //#region Methods
+
+  public ngAfterViewInit(): void {
+    const htmlVideoElement = this.videoPlayerElementRef
+      .nativeElement as HTMLVideoElement;
+
+    const mediaSource = new MediaSource();
+    const buffer = mediaSource.addSourceBuffer('aaa');
+  }
+
+  //#endregion
 }
