@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
+import {LoadViewViewModel} from '../view-models/load-video.view-model';
 
 @Injectable()
 export class VideoService {
@@ -9,9 +10,10 @@ export class VideoService {
   }
 
   public loadVideoAsync(fileName: string, start: number, end: number): Observable<ArrayBuffer> {
-    const fullUrl = `http://localhost:64186/api/video?from=${start}&to=${end}&fileName=${fileName}`;
+    const fullUrl = `http://localhost:57366/api/video`;
+    const model = new LoadViewViewModel(fileName, start, end);
     return this.httpClient
-      .get(fullUrl, {
+      .post(fullUrl, model, {
         responseType: 'arraybuffer'
       });
   }
