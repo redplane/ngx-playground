@@ -2,6 +2,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import {PrizeService} from '../services/prize.service';
 import {HttpClientModule} from '@angular/common/http';
+import {VideoService} from '../services/video.service';
 
 const moduleRoutes: Routes = [
   {
@@ -23,6 +24,11 @@ const moduleRoutes: Routes = [
     path: 'web-rtc',
     loadChildren: () => import('./web-rtc/web-rtc.module')
       .then(m => m.WebRtcModule)
+  },
+  {
+    path: 'video-player',
+    loadChildren: () => import('./video-player/video-player.module')
+      .then(m => m.VideoPlayerModule)
   }
 ];
 
@@ -32,7 +38,8 @@ const moduleRoutes: Routes = [
     RouterModule.forRoot(moduleRoutes)
   ],
   providers: [
-    PrizeService
+    PrizeService,
+    VideoService
   ],
   exports: [
     RouterModule
